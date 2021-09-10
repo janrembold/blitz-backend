@@ -3,5 +3,5 @@ node_js:
   - "node"
 
 script:
-  - echo 'Hello Travis! "$FOO"' 
+  - echo 'Hello Travis! "$FOO" "${FOO}" "{$FOO}"' 
   - npm test
