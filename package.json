@@ -1,0 +1,11 @@
+{
+  "name": "blitz-backend",
+  "version": "1.0.0",
+  "repository": "https://github.com/janrembold/blitz-backend.git",
+  "author": "Rembold, Jan-Hendrik <jan-hendrik.rembold@haufe-akademie.de>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'Hello World!'"
+  }
+}
