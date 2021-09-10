@@ -3,5 +3,5 @@ node_js:
   - "node"
 
 script:
-  - echo "Hello Travis!"
+  - echo "Hello Travis!" 
   - npm test
