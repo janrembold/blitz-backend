@@ -3,6 +3,7 @@ node_js:
   - "node"
 
 script:
+  - npm i
   - npm run cdk.deploy
 
 # - DB (Postgres) erstellen, falls noch nicht vorhanden
