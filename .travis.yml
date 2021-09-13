@@ -3,8 +3,7 @@ node_js:
   - "node"
 
 script:
-  - npm i
-  - npm run cdk.deploy
+  - yarn cdk.deploy
 
 # - DB (Postgres) erstellen, falls noch nicht vorhanden
 # - db-migrate aufrufen (node & TS)
