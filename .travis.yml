@@ -3,7 +3,7 @@ node_js:
   - "node"
 
 script:
-  - npm cdk.deploy
+  - npm run cdk.deploy
 
 # - DB (Postgres) erstellen, falls noch nicht vorhanden
 # - db-migrate aufrufen (node & TS)
