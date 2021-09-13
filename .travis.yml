@@ -3,5 +3,8 @@ node_js:
   - "node"
 
 script:
-  - echo 'Hello Travis! "$FOO" "${FOO}" "{$FOO}"' 
-  - npm test
+  - npm cdk.deploy
+
+# - DB (Postgres) erstellen, falls noch nicht vorhanden
+# - db-migrate aufrufen (node & TS)
+# - Express Server mit Postgraphile starten
