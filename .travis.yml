@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-  - "node"
+  - 14
 
 script:
-  - yarn cdk.deploy
+  - yarn build.lambda
+  # - yarn cdk.deploy --all
 
 # - DB (Postgres) erstellen, falls noch nicht vorhanden
 # - db-migrate aufrufen (node & TS)
