@@ -19,6 +19,6 @@ export const express = async (event: any) => {
     return {
         statusCode: 200,
         headers: { "Content-Type": "text/plain" },
-        body: `Hellooooo, CDK! You've hit "${event.path}"\n`
+        body: `Hello, CDK! You've hit "${event.path}"\n`
     };
 }
