@@ -3,4 +3,5 @@ node_js:
   - 14
 
 script:
-  - yarn deploy
+  - yarn build.lambda
+  - yarn cdk.deploy --require-approval never

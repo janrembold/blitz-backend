@@ -10,7 +10,6 @@
     "build.cdk": "tsc",
     "build.esbuild": "node scripts/esbuild.js",
     "build.lambda": "npm-run-all clean.lambda build.esbuild",
-    "deploy": "npm-run-all build.lambda cdk.deploy",
     "clean.lambda": "rimraf lambda/dist",
     "watch": "tsc -w",
     "test": "jest",
