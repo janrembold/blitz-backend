@@ -10,7 +10,7 @@ import { ApiGatewayStack } from '../lib/api-gateway-stack';
 dotenv.config();
 console.log('AWS Account', process.env.AWS_ACCOUNT_NUMBER);
 
-const stage = process.env.STAGE || 'stage-not-set';
+const stage = process.env.STAGE || 'local';
 
 const app = new cdk.App();
 const vpcStack  = new VpcStack(app, 'VpcStack');
@@ -25,10 +25,10 @@ const postgraphileLambdaStack = new LambdaStack(app, 'PostgraphileExpress', {
   vpc: vpcStack.vpc,
   stage,
   environment: {
-    DB_USER: 'postgres', // ???
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+    SECRET_ARN: dbStack.secret.secretArn,
+    DB_NAME: dbStack.databaseName, 
     DB_HOST: dbStack.postgresInstance.dbInstanceEndpointAddress,
-    DB_NAME: 'mydb', // ???
-    DB_PASSWORD: 'secretpassword', // ???
     DB_PORT: dbStack.postgresInstance.dbInstanceEndpointPort,
   } 
 });

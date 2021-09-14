@@ -3,9 +3,4 @@ node_js:
   - 14
 
 script:
-  - yarn build.lambda
-  # - yarn cdk.deploy --all
-
-# - DB (Postgres) erstellen, falls noch nicht vorhanden
-# - db-migrate aufrufen (node & TS)
-# - Express Server mit Postgraphile starten
+  - yarn deploy
