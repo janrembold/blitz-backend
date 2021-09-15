@@ -12,14 +12,11 @@ export interface RDSStackProps extends StackProps {
 
 export class RDSStack extends Stack {
 
-    readonly databaseName: string;
     readonly secret: ISecret;
     readonly postgresInstance: IDatabaseInstance;
 
     constructor(scope: App, id: string, props: RDSStackProps) {
         super(scope, id, props);
-
-        this.databaseName = `blitz${props.stage}`;
 
         this.secret = new Secret(this, `${props.stage}-DBCredentialsSecret`, {
             secretName: `${props.stage}-credentials`,           
@@ -42,7 +39,7 @@ export class RDSStack extends Stack {
             vpc: props.vpc,
             vpcPlacement: {subnetType: SubnetType.PRIVATE_ISOLATED},
             storageEncrypted: true,
-            databaseName: this.databaseName,
+            databaseName: 'blitz',
             credentials: Credentials.fromGeneratedSecret('postgres'),
             backupRetention: Duration.days(3),
             publiclyAccessible: false

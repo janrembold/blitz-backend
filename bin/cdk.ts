@@ -32,7 +32,7 @@ const postgraphileLambdaStack = new LambdaStack(app, 'PostgraphileExpress', {
   environment: {
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
     SECRET_ARN: dbStack.secret.secretArn,
-    DB_NAME: dbStack.databaseName, 
+    DB_NAME: 'blitz', 
     DB_HOST: dbStack.postgresInstance.dbInstanceEndpointAddress,
     DB_PORT: dbStack.postgresInstance.dbInstanceEndpointPort,
   } 

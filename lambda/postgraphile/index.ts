@@ -6,29 +6,25 @@ export const express = async (event: any) => {
     let now = 'notset';
 
     try {
-        const credentials = await getAwsSecret(process.env.SECRET_ARN);
+        const secret = await getAwsSecret(process.env.SECRET_ARN);
+        const credentials = JSON.parse(secret!);
+
         console.log('SecretManager', typeof credentials, credentials);
 
-        const credeObj = JSON.parse(credentials!);       
         const poolConfig = {
-            user: 'postgres',
-            password: credeObj.password,
+            user: credentials.username,
+            password: credentials.password,
             host: process.env.DB_HOST,
             database: process.env.DB_NAME,
             port: parseInt(process.env.DB_PORT || '5432', 10),
         };
         console.log('Pool Config', poolConfig);
 
-        const pool = new Pool(poolConfig)
-        
-        const {rows} = await pool.query('SELECT NOW()');
-        console.log('SELECT NOW', rows[0] || 'mist');
-        
-        // , (err: any, res: any) => {
-        //     console.log(err, res)
-        //     now = JSON.stringify(res.rows)
-        //     pool.end()
-        // })
+        const pool = new Pool(poolConfig);
+        const res = await pool.query('SELECT NOW()');
+        await pool.end();
+
+        console.log('SELECT NOW', res);
     } catch(err: any) {
         return {
             statusCode: 200,
