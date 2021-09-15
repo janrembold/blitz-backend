@@ -3,7 +3,8 @@ import { getAwsSecret } from './secretsManager';
 
 export const express = async (event: any) => {
     console.log("request:", JSON.stringify(event, undefined, 2));
-        
+    let now = 'notset';
+
     try {
         const DB_PASSWORD = await getAwsSecret(process.env.SECRET_ARN);
         console.log('SecretManager', DB_PASSWORD);
@@ -18,6 +19,7 @@ export const express = async (event: any) => {
         
         pool.query('SELECT NOW()', (err: any, res: any) => {
             console.log(err, res)
+            now = JSON.stringify(res.rows)
             pool.end()
         })
     } catch(err: any) {
@@ -31,6 +33,6 @@ export const express = async (event: any) => {
     return {
         statusCode: 200,
         headers: { "Content-Type": "text/plain" },
-        body: `Hello, CDK! You've hit "${event.path}"\n`
+        body: `Hello, CDK! You've hit "${event.path}" & "${now}"\n`
     };
 }
