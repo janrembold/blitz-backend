@@ -11,7 +11,7 @@ import { CredentialsRoleStack } from '../lib/credentials-role-stack';
 dotenv.config();
 console.log('AWS Account', process.env.AWS_ACCOUNT_NUMBER);
 
-const stage = process.env.STAGE || 'local';
+const stage = process.env.TRAVIS_BRANCH || 'local';
 
 const app = new cdk.App();
 const vpcStack  = new VpcStack(app, 'VpcStack');
