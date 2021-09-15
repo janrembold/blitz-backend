@@ -52,11 +52,6 @@ export class RDSStack extends Stack {
             // deletionProtection: false,
         });    
         
-        new CfnOutput(this, 'Secret Username', { value: this.secret.secretValueFromJson('username').toString() }); 
-        new CfnOutput(this, 'Secret Password', { value: this.secret.secretValueFromJson('password').toString() }); 
-        
-        new CfnOutput(this, 'Secret Name', { value: this.secret.secretName }); 
         new CfnOutput(this, 'Secret ARN', { value: this.secret.secretArn }); 
-        new CfnOutput(this, 'Secret Full ARN', { value: this.secret.secretFullArn || '' });
     }
 }

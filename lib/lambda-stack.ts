@@ -24,8 +24,9 @@ export class LambdaStack extends Stack {
             runtime: Runtime.NODEJS_14_X,
             handler: props.handler, 
             code: Code.fromAsset(path.join(__dirname, '..', 'lambda', 'dist')),
-            environment: props.environment,
-            role: props.role
+            environment: props.environment
         });
+
+        this.lambda.grantInvoke(props.role);
     }
 }

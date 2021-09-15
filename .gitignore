@@ -12,3 +12,5 @@ bin/*.d.ts
 .cdk.staging
 cdk.out
 .env
+
+.DS_Store
