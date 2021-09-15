@@ -3,11 +3,11 @@ import { getAwsSecret } from './secretsManager';
 
 export const express = async (event: any) => {
     console.log("request:", JSON.stringify(event, undefined, 2));
-    
-    const DB_PASSWORD = await getAwsSecret(process.env.DB_HOST);
-    console.log('SecretManager', DB_PASSWORD);
-
+        
     try {
+        const DB_PASSWORD = await getAwsSecret(process.env.DB_HOST);
+        console.log('SecretManager', DB_PASSWORD);
+
         const pool = new Pool({
             user: 'postgres',
             password: DB_PASSWORD,
