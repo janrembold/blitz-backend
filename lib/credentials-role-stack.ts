@@ -16,5 +16,6 @@ export class CredentialsRoleStack extends Stack {
         }); 
                 
         this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
+        this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/SecretsManagerReadWrite"));
     }
 }

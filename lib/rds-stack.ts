@@ -32,7 +32,7 @@ export class RDSStack extends Stack {
                 generateStringKey: 'password',
                 passwordLength: 16
             }
-        });  
+        });
 
         this.secret.grantRead(props.role);
         
