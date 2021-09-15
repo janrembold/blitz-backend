@@ -2,10 +2,12 @@ import {App, Stack, StackProps} from '@aws-cdk/core';
 import {Code, Function, IFunction, Runtime} from '@aws-cdk/aws-lambda';
 import { Vpc } from '@aws-cdk/aws-ec2';
 import * as path from 'path';
+import { IRole } from '@aws-cdk/aws-iam';
 
 export interface LambdaStackProps extends StackProps {
     environment?: { [key: string]: string; } | undefined;
     handler: string;
+    role: IRole;
     stage: string; 
     vpc: Vpc;
 }
@@ -22,7 +24,8 @@ export class LambdaStack extends Stack {
             runtime: Runtime.NODEJS_14_X,
             handler: props.handler, 
             code: Code.fromAsset(path.join(__dirname, '..', 'lambda', 'dist')),
-            environment: props.environment
+            environment: props.environment,
+            role: props.role
         });
     }
 }
