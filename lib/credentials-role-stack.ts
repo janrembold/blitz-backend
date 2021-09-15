@@ -12,7 +12,8 @@ export class CredentialsRoleStack extends Stack {
 
         this.role = new Role(this, "RDSCredentialsRole", {
           assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
-        });         
+        }); 
+                
         this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
     }
 }

@@ -1,6 +1,6 @@
 import {App, CfnOutput, Duration, Stack, StackProps} from "@aws-cdk/core";
 import {Credentials, DatabaseInstance, DatabaseInstanceEngine, IDatabaseInstance, PostgresEngineVersion} from '@aws-cdk/aws-rds';
-import {HostedRotation, ISecret, Secret} from '@aws-cdk/aws-secretsmanager';
+import {ISecret, Secret} from '@aws-cdk/aws-secretsmanager';
 import {InstanceClass, InstanceSize, InstanceType, SubnetType, Vpc} from "@aws-cdk/aws-ec2";
 import { IRole } from "@aws-cdk/aws-iam";
 
@@ -33,10 +33,6 @@ export class RDSStack extends Stack {
                 passwordLength: 16
             }
         });  
-
-        this.secret.addRotationSchedule("RotationSchedule", {
-          hostedRotation: HostedRotation.postgreSqlSingleUser()
-        });
 
         this.secret.grantRead(props.role);
         
