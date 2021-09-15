@@ -6,12 +6,15 @@ export const express = async (event: any) => {
     let now = 'notset';
 
     try {
-        const DB_PASSWORD = await getAwsSecret(process.env.SECRET_ARN);
-        console.log('SecretManager', DB_PASSWORD);
+        const credentials = await getAwsSecret(process.env.SECRET_ARN);
+        console.log('SecretManager', typeof credentials, credentials);
+
+        const credeObj = JSON.parse(credentials!);
+        console.log('SecretManager pass', credeObj.password);
 
         const pool = new Pool({
             user: 'postgres',
-            password: DB_PASSWORD,
+            password: credeObj.password,
             host: process.env.DB_HOST,
             database: process.env.DB_NAME,
             port: parseInt(process.env.DB_PORT || '5432', 10),
