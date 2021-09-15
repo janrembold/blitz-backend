@@ -5,7 +5,7 @@ export const express = async (event: any) => {
     console.log("request:", JSON.stringify(event, undefined, 2));
         
     try {
-        const DB_PASSWORD = await getAwsSecret(process.env.DB_HOST);
+        const DB_PASSWORD = await getAwsSecret(process.env.SECRET_ARN);
         console.log('SecretManager', DB_PASSWORD);
 
         const pool = new Pool({
