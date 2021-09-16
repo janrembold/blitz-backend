@@ -3,13 +3,11 @@ import { getAwsSecret } from './secretsManager';
 
 export const express = async (event: any) => {
     console.log("request:", JSON.stringify(event, undefined, 2));
-    let now = 'notset';
 
     try {
+        console.log(`Retrieve secret from "${process.env.SECRET_ARN}"`);
         const secret = await getAwsSecret(process.env.SECRET_ARN);
         const credentials = JSON.parse(secret!);
-
-        console.log('SecretManager', typeof credentials, credentials);
 
         const poolConfig = {
             user: credentials.username,
@@ -21,21 +19,26 @@ export const express = async (event: any) => {
         console.log('Pool Config', poolConfig);
 
         const pool = new Pool(poolConfig);
+        console.log('Pool connected....maybe?! Trying SELECT...')
+
         const res = await pool.query('SELECT NOW()');
         await pool.end();
+        console.log('SELECT NOW', res?.rows?.[0] || 'fooooo');
 
-        console.log('SELECT NOW', res);
     } catch(err: any) {
+
+        console.error('Error', err);
+
         return {
             statusCode: 200,
             headers: { "Content-Type": "text/plain" },
-            body: `Buhhhh, CDK! You've hit "${err.message}"\n`
+            body: `Buhhhh, CDK! You've hit an error"\n`
         };
     }
 
     return {
         statusCode: 200,
         headers: { "Content-Type": "text/plain" },
-        body: `Hello, CDK! You've hit "${event.path}" & "${now}"\n`
+        body: `Hello, CDK! You've hit "${event.path}""\n`
     };
 }

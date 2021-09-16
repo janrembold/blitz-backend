@@ -14,7 +14,9 @@ export class CredentialsRoleStack extends Stack {
           assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
           description: 'RDSCredentialsRole'
         }); 
-                
+
+        // ToDo: Add custom policy when everything is working (maybe with CloudTrail Events)
+
         this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"));
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));

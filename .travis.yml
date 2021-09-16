@@ -2,6 +2,9 @@ language: node_js
 node_js:
   - 14
 
+services:
+  - docker  
+
 script:
   - yarn build.lambda
-  - yarn cdk.deploy --require-approval never
+  - yarn cdk.deploy

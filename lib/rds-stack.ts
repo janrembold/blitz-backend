@@ -28,26 +28,27 @@ export class RDSStack extends Stack {
                 includeSpace: false,
                 generateStringKey: 'password',
                 passwordLength: 16
-            }
+            },
         });
-
-        this.secret.grantRead(props.role);
         
         this.postgresInstance = new DatabaseInstance(this, 'postgres-rds-instance', {
             engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_13_3 }),
             instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MICRO),
             vpc: props.vpc,
-            vpcPlacement: {subnetType: SubnetType.PRIVATE_ISOLATED},
+            vpcSubnets: {subnetType: SubnetType.PRIVATE_ISOLATED},
             storageEncrypted: true,
             databaseName: 'blitz',
-            credentials: Credentials.fromGeneratedSecret('postgres'),
-            backupRetention: Duration.days(3),
-            publiclyAccessible: false
+            credentials: Credentials.fromSecret(this.secret, 'postgres'),
+            allocatedStorage: 5
+            // backupRetention: Duration.days(3),
+            // publiclyAccessible: false,
             // multiAz: false,
-            // allocatedStorage: 25,
             // storageType: StorageType.GP2,
             // deletionProtection: false,
         });    
+        
+        this.secret.grantRead(props.role);
+        this.postgresInstance.grantConnect(props.role);
         
         new CfnOutput(this, 'Secret ARN', { value: this.secret.secretArn }); 
     }

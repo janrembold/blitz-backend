@@ -3,7 +3,6 @@ const path = require('path');
 
 const ES_BUILD_CONFIG = {
   entryPoints: [
-      path.join('lambda', 'migrate', 'index.ts'),
       path.join('lambda', 'postgraphile', 'index.ts'),
   ],
   external: ['pg-native'],

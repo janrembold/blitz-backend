@@ -2,6 +2,8 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import * as dotenv from 'dotenv';
+// import * as path from 'path';
+// import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import { VpcStack } from '../lib/vpc-stack';
 import { RDSStack } from '../lib/rds-stack';
 import { LambdaStack } from '../lib/lambda-stack';
@@ -24,8 +26,13 @@ const dbStack = new RDSStack(app, 'RDSStack', {
   stage
 });
 
-const postgraphileLambdaStack = new LambdaStack(app, 'PostgraphileExpress', {
-  handler: 'postgraphile/index.express',
+// const migrationStack = new DockerImageAsset(app, 'MigrationDockerImage', {
+//   directory: path.join(__dirname, 'migrate'),
+//   buildArgs: {}
+// });
+
+const postgraphileLambdaStack = new LambdaStack(app, 'PostgraphileExpressStack', {
+  handler: 'index.express',
   role: credentialsRoleStack.role,
   vpc: vpcStack.vpc,
   stage,

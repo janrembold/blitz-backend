@@ -1,0 +1,13 @@
+{
+  "name": "migrate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "db-migrate": "0.11.12"
+  },
+  "scripts": {
+    "migration.create": "db-migrate create",
+    "migration.up": "db-migrate up"
+  }
+}
