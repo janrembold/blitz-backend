@@ -20,7 +20,8 @@
     "cdk.diff": "cdk diff",
     "cdk.doctor": "cdk doctor",
     "cdk.synth": "cdk synth",
-    "cdk.version": "cdk --version"
+    "cdk.version": "cdk --version",
+    "deploy": "npm-run-all build.lambda cdk.deploy"
   },
   "dependencies": {
     "@aws-cdk/assert": "1.123.0",
