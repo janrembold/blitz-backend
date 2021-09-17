@@ -7,7 +7,7 @@ import { IRole } from '@aws-cdk/aws-iam';
 export interface LambdaStackProps extends StackProps {
     environment?: { [key: string]: string; } | undefined;
     handler: string;
-    // inboundDbAccessSecurityGroup: string;
+    inboundDbAccessSecurityGroup: string;
     role: IRole;
     stage: string; 
     vpc: Vpc;
@@ -20,16 +20,15 @@ export class LambdaStack extends Stack {
     constructor(scope: App, id: string, props: LambdaStackProps) {
         super(scope, id, props);
 
-        this.lambda = new Function(this, id, {
-            functionName: id, 
+        this.lambda = new Function(this, 'LambdaFunction', {
             runtime: Runtime.NODEJS_14_X,
             handler: props.handler, 
             code: Code.fromAsset(path.join(__dirname, '..', 'lambda', 'dist')),
-            timeout: Duration.minutes(1),
+            // timeout: Duration.minutes(1),
             environment: props.environment,
             role: props.role,
             vpc: props.vpc,
-            // securityGroup: SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
+            securityGroups: [SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)]
         });
     }
 }

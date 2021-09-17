@@ -9,4 +9,7 @@ RUN npm install
 
 COPY . .
 
+EXPOSE 8080
+
+# ToDo: Add something to trigger this from the aws cli
 CMD [ "npm", "run", "migration.up" ]

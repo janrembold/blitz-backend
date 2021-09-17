@@ -1,18 +1,17 @@
 import {App, Stack, StackProps} from "@aws-cdk/core";
 import { IRole, ManagedPolicy, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
 
-export interface CredentialsRoleStackProps extends StackProps {}
+export interface RoleStackProps extends StackProps {}
 
-export class CredentialsRoleStack extends Stack {
+export class RoleStack extends Stack {
 
     readonly role: IRole;
 
-    constructor(scope: App, id: string, props: CredentialsRoleStackProps) {
+    constructor(scope: App, id: string, props: RoleStackProps) {
         super(scope, id, props);
 
-        this.role = new Role(this, "RDSCredentialsRole", {
+        this.role = new Role(this, 'LambdaRole', {
           assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
-          description: 'RDSCredentialsRole'
         }); 
 
         // ToDo: Add custom policy when everything is working (maybe with CloudTrail Events)
