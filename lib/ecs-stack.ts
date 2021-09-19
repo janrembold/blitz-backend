@@ -24,7 +24,9 @@ export class EcsStack extends Stack {
         new ApplicationLoadBalancedFargateService(this, 'DBMigrationService', {
             cluster,
             taskImageOptions: {
-                image: ContainerImage.fromAsset(path.join(__dirname, '..', 'migrate')),
+                image: ContainerImage.fromAsset(path.join(__dirname, '..', 'migrate'), {
+                    buildArgs: {}
+                }),
                 environment: props.environment
             },
             publicLoadBalancer: false,
