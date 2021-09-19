@@ -8,7 +8,7 @@ export interface VpcStackProps extends StackProps {
 export class VpcStack extends Stack {
     readonly vpc: Vpc;
     readonly ingressSecurityGroup: SecurityGroup;
-    // readonly egressSecurityGroup: SecurityGroup;
+    readonly egressSecurityGroup: SecurityGroup;
 
     constructor(scope: App, id: string, props: VpcStackProps) {
         super(scope, id, props);
@@ -22,22 +22,20 @@ export class VpcStack extends Stack {
                 subnetType: SubnetType.PRIVATE_ISOLATED,
             }],
             natGateways: 0,
-            maxAzs: 2
         });
 
-        this.ingressSecurityGroup = new SecurityGroup(this, `${props.stage}-ingress-security-group`, {
+        this.ingressSecurityGroup = new SecurityGroup(this, `ingress-security-group`, {
             vpc: this.vpc,
-            allowAllOutbound: true,
+            allowAllOutbound: false,
             // securityGroupName: 'IngressSecurityGroup',
         });
-        // this.ingressSecurityGroup.addIngressRule(Peer.ipv4('10.0.0.0/16'), Port.tcp(5432));
-        this.ingressSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(5432));
+        this.ingressSecurityGroup.addIngressRule(Peer.ipv4('10.0.0.0/16'), Port.tcp(5432));
         
-        // this.egressSecurityGroup = new SecurityGroup(this, 'egress-security-group', {
-        //     vpc: this.vpc,
-        //     allowAllOutbound: false,
-        //     securityGroupName: 'EgressSecurityGroup',
-        // });
-        // this.egressSecurityGroup.addEgressRule(Peer.anyIpv4(), Port.tcp(80));
+        this.egressSecurityGroup = new SecurityGroup(this, 'egress-security-group', {
+            vpc: this.vpc,
+            allowAllOutbound: false,
+            // securityGroupName: 'EgressSecurityGroup',
+        });
+        this.egressSecurityGroup.addEgressRule(Peer.anyIpv4(), Port.tcp(80));
     }
 }
