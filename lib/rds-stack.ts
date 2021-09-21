@@ -38,7 +38,7 @@ export class RDSStack extends Stack {
             engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_13_3 }),
             instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MICRO),
             vpc: props.vpc,
-            vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
+            // vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
             // vpcPlacement: { subnetType: SubnetType.PRIVATE_ISOLATED },
             storageEncrypted: true,
             databaseName: 'blitz',

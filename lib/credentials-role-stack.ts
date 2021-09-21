@@ -1,5 +1,5 @@
 import {App, Stack, StackProps} from "@aws-cdk/core";
-import { IRole, ManagedPolicy, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
+import { Effect, IRole, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
 
 export interface RoleStackProps extends StackProps {}
 
@@ -15,10 +15,17 @@ export class RoleStack extends Stack {
         }); 
 
         // ToDo: Add custom policy when everything is working (maybe with CloudTrail Events)
+        this.role.addToPrincipalPolicy(new PolicyStatement({
+          effect: Effect.ALLOW,
+          resources: ['*'],
+          actions: [
+            'secretsmanager:*'
+          ]
+        }));
 
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"));
-        this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
         this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"));
+        this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
     }
 }

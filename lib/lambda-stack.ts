@@ -7,7 +7,8 @@ import { IRole } from '@aws-cdk/aws-iam';
 export interface LambdaStackProps extends StackProps {
     environment?: { [key: string]: string; } | undefined;
     handler: string;
-    inboundDbAccessSecurityGroup: string;
+    // inboundDbAccessSecurityGroup: string;
+    // outboundDbAccessSecurityGroup: string;
     role: IRole;
     stage: string; 
     vpc: Vpc;
@@ -28,9 +29,10 @@ export class LambdaStack extends Stack {
             environment: props.environment,
             role: props.role,
             vpc: props.vpc,
-            securityGroups: [
-                SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
-            ]
+            // securityGroups: [
+            //     SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup),
+            //     SecurityGroup.fromSecurityGroupId(this, 'outboundDbAccessSecurityGroup' + id, props.outboundDbAccessSecurityGroup)
+            // ]
         });
     }
 }
