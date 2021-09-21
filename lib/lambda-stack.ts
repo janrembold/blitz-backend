@@ -28,7 +28,9 @@ export class LambdaStack extends Stack {
             environment: props.environment,
             role: props.role,
             vpc: props.vpc,
-            securityGroups: [SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)]
+            securityGroups: [
+                SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
+            ]
         });
     }
 }

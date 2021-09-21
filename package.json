@@ -38,6 +38,7 @@
     "aws-sdk": "2.990.0",
     "db-migrate": "0.11.12",
     "dotenv": "10.0.0",
+    "node-fetch": "^3.0.0",
     "pg": "8.7.1",
     "source-map-support": "0.5.20"
   },

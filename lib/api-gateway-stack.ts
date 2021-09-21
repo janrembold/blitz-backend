@@ -18,7 +18,7 @@ export class ApiGatewayStack extends Stack {
         super(scope, id, props);
 
         this.apiGateway = new LambdaRestApi(this, `ApiGateway`, {
-            handler: props.handler 
+            handler: props.handler,        
         });
     }
 }

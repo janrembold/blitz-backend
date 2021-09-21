@@ -44,7 +44,9 @@ export class RDSStack extends Stack {
             databaseName: 'blitz',
             credentials: Credentials.fromSecret(this.secret, dbUsername),
             allocatedStorage: 5,
-            securityGroups: [SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)]
+            securityGroups: [
+                SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
+            ]
             // backupRetention: Duration.days(3),
             // publiclyAccessible: false,
             // multiAz: false,

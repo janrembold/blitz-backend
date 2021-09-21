@@ -1,10 +1,25 @@
 import { Pool } from 'pg';
 import { getAwsSecret } from './secretsManager';
+import fetch from 'node-fetch';
+
+const checkOnlineStatus = async () => {
+    try {
+      const online = await fetch("https://janrembold.github.io/img/icons/github.png");
+      return online.status >= 200 && online.status < 300; // either true or false
+    } catch (err) {
+      return false; // definitely offline
+    }
+  };
 
 export const express = async (event: any) => {
     console.log("request:", JSON.stringify(event, undefined, 2));
     const { path } = event;
     let body = `Hello, CDK! You've hit "${path}""\n`;
+
+    if(path === '/fetch') {
+        const isOnline = await checkOnlineStatus();
+        body += `- Lambda is ${isOnline ? 'online' : 'offline'}\n`;
+    }
 
     if(path === '/secret') {
         try {
@@ -14,9 +29,14 @@ export const express = async (event: any) => {
             const credentials = JSON.parse(secret!);
             body += `- Secret received for "${credentials.username}"\n`;
             body += `- DB_PASS = "${credentials.password.slice(0,5)}..."\n`;
+            body += `- DB_HOST = "${credentials.host}..."\n`;
         } catch(err: any) {
             body += `- Error occured "${err.message}"\n`;
         }
+    }
+
+    if(path === '/env') {
+        body += `- ENV = "${JSON.stringify(process.env)}"\n`;
     }
 
     if(path === '/env') {
@@ -42,6 +62,59 @@ export const express = async (event: any) => {
             if(pool) {
                 await pool.end();
                 body += `- Pool closed\n`;
+            } else {
+                body += `- Pool was not defined\n`;
+            }
+        } catch(err: any) {
+            body += `- Error occured "${err.message}"\n`;
+        }
+    }
+
+    if(path === '/db2') {
+        try {
+            // const secret = await getAwsSecret(process.env.SECRET_ARN);
+            // const credentials = JSON.parse(secret!);
+
+            const pool = new Pool({
+                user: 'postgres',
+                password: 'vWtG3shlG57CigQ3',
+                host: 'rp1tt6ij6ga5edo.csjuqhgpa20j.eu-central-1.rds.amazonaws.com',
+                database: 'blitz',
+                port: 5432,
+            });
+            body += 'Pool connected....maybe?! Trying SELECT...\n';
+
+            if(pool) {
+                await pool.end();
+                body += `- Pool closed\n`;
+            } else {
+                body += `- Pool was not defined\n`;
+            }
+        } catch(err: any) {
+            body += `- Error occured "${err.message}"\n`;
+        }
+    }
+
+    if(path === '/query2') {
+        try {
+            // const secret = await getAwsSecret(process.env.SECRET_ARN);
+            // const credentials = JSON.parse(secret!);
+
+            const pool = new Pool({
+                user: 'postgres',
+                password: 'vWtG3shlG57CigQ3',
+                host: 'rp1tt6ij6ga5edo.csjuqhgpa20j.eu-central-1.rds.amazonaws.com',
+                database: 'blitz',
+                port: 5432,
+            });
+            body += 'Pool connected....maybe?! Trying SELECT...\n';
+
+            if(pool) {
+                const res = await pool.query('SELECT NOW()');
+                body += `- SELECT NOW() = "${res?.rows?.[0].now || 'fooooo'}"\n`;
+                body += `- res = "${JSON.stringify(res) || 'fooooo'}"\n`;
+
+                await pool.end();
             } else {
                 body += `- Pool was not defined\n`;
             }
