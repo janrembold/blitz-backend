@@ -19,7 +19,9 @@ export class RoleStack extends Stack {
           effect: Effect.ALLOW,
           resources: ['*'],
           actions: [
-            'secretsmanager:*'
+            'secretsmanager:*',
+            'logs:*',
+            'ssmmessages:*'
           ]
         }));
 

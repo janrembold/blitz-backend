@@ -7,14 +7,14 @@ import { RDSStack } from '../lib/rds-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import { ApiGatewayStack } from '../lib/api-gateway-stack';
 import { RoleStack } from '../lib/credentials-role-stack';
+import { EcsStack } from '../lib/ecs-stack';
 // import * as path from 'path';
 // import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
-// import { EcsStack } from '../lib/ecs-stack';
 
 dotenv.config();
 console.log('AWS Account', process.env.AWS_ACCOUNT_NUMBER);
 
-const stage = process.env.TRAVIS_BRANCH || 'local';
+const stage = process.env.TRAVIS_BRANCH || 'main';
 
 const app = new cdk.App();
 const vpcStack  = new VpcStack(app, 'VpcStack', {
@@ -30,17 +30,17 @@ const dbStack = new RDSStack(app, 'RDSStack', {
   stage
 });
 
-// const migrationStack = new EcsStack(app, 'MigrationDockerStack', {
-//   vpc: vpcStack.vpc,
-//   // role: roleStack.role,
-//   environment: {
-//     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-//     SECRET_ARN: dbStack.secret.secretArn,
-//     DB_NAME: 'blitz', 
-//     DB_HOST: dbStack.postgresInstance.dbInstanceEndpointAddress,
-//     DB_PORT: dbStack.postgresInstance.dbInstanceEndpointPort,
-//   } 
-// });
+const migrationStack = new EcsStack(app, 'MigrationDockerStack', {
+  vpc: vpcStack.vpc,
+  // role: roleStack.role,
+  environment: {
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+    DB_PASSWORD: dbStack.secret.secretValueFromJson('password').toString(),
+    DB_NAME: 'blitz', 
+    DB_HOST: dbStack.postgresInstance.dbInstanceEndpointAddress,
+    DB_PORT: dbStack.postgresInstance.dbInstanceEndpointPort,
+  } 
+});
 
 const postgraphileLambdaStack = new LambdaStack(app, 'PostgraphileExpressStack', {
   handler: 'index.express',

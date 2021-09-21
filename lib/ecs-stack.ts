@@ -4,6 +4,7 @@ import * as path from 'path';
 
 import { AsgCapacityProvider, Cluster, ContainerImage, EcsOptimizedImage } from '@aws-cdk/aws-ecs';
 import { ApplicationLoadBalancedFargateService } from '@aws-cdk/aws-ecs-patterns';
+import { IRole } from '@aws-cdk/aws-iam';
 
 export interface EcsStackProps extends StackProps {
     // role: IRole;
@@ -33,13 +34,15 @@ export class EcsStack extends Stack {
         // });
 
         const cluster = new Cluster(this, "DBMigrationCluster", {
-            vpc: props.vpc
+            vpc: props.vpc,
         });
 
         console.log('Docker folder', path.join(__dirname, 'migrate'));
         new ApplicationLoadBalancedFargateService(this, 'DBMigrationService', {
             cluster,
             taskImageOptions: {
+                enableLogging: true,
+                // executionRole: props.role,
                 image: ContainerImage.fromAsset(path.join(__dirname, '..', 'migrate'), {
                     buildArgs: {}
                 }),
