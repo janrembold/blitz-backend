@@ -1,60 +1,13 @@
 {
   "name": "blitz-backend",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "main": "app.js",
   "license": "MIT",
-  "bin": {
-    "cdk": "bin/cdk.js"
-  },
   "scripts": {
-    "build": "npm-run-all build.lambda build.cdk",
-    "build.cdk": "tsc",
-    "build.esbuild": "node scripts/esbuild.js",
-    "build.lambda": "npm-run-all clean.lambda build.esbuild",
-    "clean.lambda": "rimraf lambda/dist",
-    "watch": "tsc -w",
-    "test": "jest",
-    "cdk": "cdk",
-    "cdk.bootstrap": "cdk bootstrap",
-    "cdk.deploy": "cdk deploy --all --require-approval never",
-    "cdk.destroy": "cdk destroy --all",
-    "cdk.diff": "cdk diff",
-    "cdk.doctor": "cdk doctor",
-    "cdk.synth": "cdk synth",
-    "cdk.version": "cdk --version",
-    "deploy": "npm-run-all build.lambda cdk.deploy"
+    "start": "node app.js"
   },
   "dependencies": {
-    "@aws-cdk/assert": "1.123.0",
-    "@aws-cdk/aws-apigateway": "1.123.0",
-    "@aws-cdk/aws-ec2": "1.123.0",
-    "@aws-cdk/aws-ecs": "1.123.0",
-    "@aws-cdk/aws-ecs-patterns": "1.123.0",
-    "@aws-cdk/aws-iam": "1.123.0",
-    "@aws-cdk/aws-lambda": "1.123.0",
-    "@aws-cdk/aws-rds": "1.123.0",
-    "@aws-cdk/aws-secretsmanager": "1.123.0",
-    "@aws-cdk/core": "1.123.0",
-    "aws-cdk": "1.123.0",
-    "aws-sdk": "2.990.0",
-    "db-migrate": "0.11.12",
-    "dotenv": "10.0.0",
-    "node-fetch": "^3.0.0",
-    "pg": "8.7.1",
-    "source-map-support": "0.5.20"
-  },
-  "devDependencies": {
-    "@types/jest": "27.0.01",
-    "@types/node": "16.9.2",
-    "@types/pg": "8.6.1",
-    "esbuild": "0.12.28",
-    "jest": "27.2.0",
-    "npm-run-all": "4.1.5",
-    "rimraf": "3.0.2",
-    "ts-jest": "27.0.5",
-    "ts-node": "10.2.1",
-    "typescript": "4.4.3"
-  },
-  "resolutions": {
-    "pac-resolver": ">=5.0.0"
+    "express": "4.17.1",
+    "postgraphile": "4.12.3"
   }
 }

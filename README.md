@@ -1,14 +1,11 @@
-# Welcome to your CDK TypeScript project!
+# Local dev stack
 
-This is a blank project for TypeScript development with CDK.
+## Postgres
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Start database with docker compose:
 
-## Useful commands
+```
+docker-compose -f stack.yml up
+```
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+See: https://docs.docker.com/desktop/mac/#resources for file sharing preferences
