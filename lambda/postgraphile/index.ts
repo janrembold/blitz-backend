@@ -70,59 +70,6 @@ export const express = async (event: any) => {
         }
     }
 
-    if(path === '/db2') {
-        try {
-            // const secret = await getAwsSecret(process.env.SECRET_ARN);
-            // const credentials = JSON.parse(secret!);
-
-            const pool = new Pool({
-                user: 'postgres',
-                password: 'vWtG3shlG57CigQ3',
-                host: 'rp1tt6ij6ga5edo.csjuqhgpa20j.eu-central-1.rds.amazonaws.com',
-                database: 'blitz',
-                port: 5432,
-            });
-            body += 'Pool connected....maybe?! Trying SELECT...\n';
-
-            if(pool) {
-                await pool.end();
-                body += `- Pool closed\n`;
-            } else {
-                body += `- Pool was not defined\n`;
-            }
-        } catch(err: any) {
-            body += `- Error occured "${err.message}"\n`;
-        }
-    }
-
-    if(path === '/query2') {
-        try {
-            // const secret = await getAwsSecret(process.env.SECRET_ARN);
-            // const credentials = JSON.parse(secret!);
-
-            const pool = new Pool({
-                user: 'postgres',
-                password: 'vWtG3shlG57CigQ3',
-                host: 'rp1tt6ij6ga5edo.csjuqhgpa20j.eu-central-1.rds.amazonaws.com',
-                database: 'blitz',
-                port: 5432,
-            });
-            body += 'Pool connected....maybe?! Trying SELECT...\n';
-
-            if(pool) {
-                const res = await pool.query('SELECT NOW()');
-                body += `- SELECT NOW() = "${res?.rows?.[0].now || 'fooooo'}"\n`;
-                body += `- res = "${JSON.stringify(res) || 'fooooo'}"\n`;
-
-                await pool.end();
-            } else {
-                body += `- Pool was not defined\n`;
-            }
-        } catch(err: any) {
-            body += `- Error occured "${err.message}"\n`;
-        }
-    }
-
     if(path === '/query') {
         try {
             const secret = await getAwsSecret(process.env.SECRET_ARN);
