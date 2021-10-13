@@ -46,7 +46,7 @@ export class EcsStack extends Stack {
             cluster,
             taskImageOptions: {
                 enableLogging: true,
-                executionRole: props.role,
+                // executionRole: props.role,
                 image: ContainerImage.fromAsset(dockerFolder, {
                     buildArgs: {}
                 }),
