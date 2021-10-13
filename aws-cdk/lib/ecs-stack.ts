@@ -7,7 +7,7 @@ import { ApplicationLoadBalancedFargateService } from '@aws-cdk/aws-ecs-patterns
 import { IRole } from '@aws-cdk/aws-iam';
 
 export interface EcsStackProps extends StackProps {
-    // role: IRole;
+    role: IRole;
     environment?: { [key: string]: string; } | undefined;
     stage: string;
     vpc: IVpc;
@@ -29,14 +29,15 @@ export class EcsStack extends Stack {
         // const capacityProvider = new AsgCapacityProvider(this, 'AsgCapacityProvider', {
         //     autoScalingGroup,
         // });
-
+        
+        const cluster = new Cluster(this, `Cluster-${props.stage}`, {
+            containerInsights: true,
+            vpc: props.vpc,
+        });
+        
         // cluster.addAsgCapacityProvider() .addCapacity('DefaultAutoScalingGroup', {
         //     instanceType: new InstanceType('t2.micro')
         // });
-
-        const cluster = new Cluster(this, `Cluster-${props.stage}`, {
-            vpc: props.vpc,
-        });
 
         const dockerFolder = path.join(__dirname, '..', '..');
         console.log('Docker folder', dockerFolder);
@@ -45,7 +46,7 @@ export class EcsStack extends Stack {
             cluster,
             taskImageOptions: {
                 enableLogging: true,
-                // executionRole: props.role,
+                executionRole: props.role,
                 image: ContainerImage.fromAsset(dockerFolder, {
                     buildArgs: {}
                 }),

@@ -1,7 +1,9 @@
 import {App, Stack, StackProps} from "@aws-cdk/core";
 import { Effect, IRole, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
 
-export interface RoleStackProps extends StackProps {}
+export interface RoleStackProps extends StackProps {
+  stage: string
+}
 
 export class RoleStack extends Stack {
 
@@ -10,8 +12,8 @@ export class RoleStack extends Stack {
     constructor(scope: App, id: string, props: RoleStackProps) {
         super(scope, id, props);
 
-        this.role = new Role(this, 'LambdaRole', {
-          assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+        this.role = new Role(this, `Role-${props.stage}`, {
+          assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"),
         }); 
 
         // ToDo: Add custom policy when everything is working (maybe with CloudTrail Events)
@@ -20,14 +22,13 @@ export class RoleStack extends Stack {
           resources: ['*'],
           actions: [
             'secretsmanager:*',
-            'logs:*',
-            'ssmmessages:*'
+            'logs:*'
           ]
         }));
 
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
         // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"));
-        this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"));
-        this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
+        // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"));
+        // this.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
     }
 }

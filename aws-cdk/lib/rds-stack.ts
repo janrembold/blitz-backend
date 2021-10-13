@@ -7,7 +7,7 @@ import { IRole } from "@aws-cdk/aws-iam";
 export interface RDSStackProps extends StackProps {
     vpc: Vpc;
     // inboundDbAccessSecurityGroup: string;
-    // role: IRole;
+    role: IRole;
     stage: string; 
 }
 
@@ -22,7 +22,6 @@ export class RDSStack extends Stack {
         const dbUsername = 'postgres';
 
         this.secret = new Secret(this, `DBCredentials-${props.stage}`, {
-            // secretName: `${props.stage}-credentials`,           
             generateSecretString: {
                 secretStringTemplate: JSON.stringify({
                     username: dbUsername,
@@ -53,8 +52,8 @@ export class RDSStack extends Stack {
             // deletionProtection: false,
         });    
         
-        // this.secret.grantRead(props.role);
-        // this.postgresInstance.grantConnect(props.role);
+        this.secret.grantRead(props.role);
+        this.postgresInstance.grantConnect(props.role);
         
         new CfnOutput(this, 'Secret ARN', { value: this.secret.secretArn }); 
     }
