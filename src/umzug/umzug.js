@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
+const path = require('path');
 
 export const migrateUp = async (connectionString) => {
   const migrationFiles = path.join(__dirname, '..', 'migrations', '*.js');

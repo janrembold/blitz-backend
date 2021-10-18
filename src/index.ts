@@ -2,7 +2,6 @@ import express, { Application, Request, Response } from "express";
 import cors from 'cors';
 import postgraphile from "postgraphile";
 import { getAwsSecret } from "./utils/getAwsSecret";
-import { Pool } from 'pg';
 import { migrateUp } from "./umzug/umzug";
 
 
@@ -25,26 +24,20 @@ const bootstrap = async () => {
   
   await migrateUp(connectionString);
 
-  const pool = new Pool({ connectionString });
-  console.log('Pool created');
-
-  try {
-    console.log('Fire SELECT NOW');
-    const res = await pool.query('SELECT NOW()');
-    console.log('SELECT NOW', res);
-    // await pool.end();
-  } catch(err: unknown) {
-    console.error('SELECT NOW ERROR', err)
-  }
-
-  //ToDo: Run postgres migration
-
   const app: Application = express();
   
   app.use(cors())
   
   app.get("/", async (req: Request, res: Response) => {
     res.send(`TS App is Running - ${(process.env.SECRET_ARN || 'foobar').slice(0, 10)}`)
+  }); 
+
+  app.get("/health", async (_req: Request, res: Response) => {
+    res.status(200).json({
+      uptime: process.uptime(),
+      message: 'Ok',
+      date: new Date()
+    });
   }); 
 
   app.use(
