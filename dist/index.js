@@ -14,39 +14,61 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const postgraphile_1 = __importDefault(require("postgraphile"));
 const getAwsSecret_1 = require("./utils/getAwsSecret");
-// const bootstrap = async () => {
-//   const secret = await getAwsSecret(process.env.SECRET_ARN);
-//   //ToDo: Run postgres migration
-// }
-(0, getAwsSecret_1.getAwsSecret)(process.env.SECRET_ARN).then(secret => {
-    console.log('Secret', secret);
+const pg_1 = require("pg");
+const umzug_1 = require("./umzug/umzug");
+// Add https://github.com/sequelize/umzug
+// Add https://github.com/graphile/worker OR https://github.com/timgit/pg-boss
+const getDbConnectionString = () => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password, host, port, dbname } = yield (0, getAwsSecret_1.getAwsSecret)(process.env.SECRET_ARN);
+    // const connectionString = `postgresql://postgres:${credentials.password}@${process.env.DB_HOST}:5432/blitz`;
+    return `postgres://${username}:${password}@${host}:${port}/${dbname}`;
+});
+const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
+    const connectionString = yield getDbConnectionString();
+    console.log('connectionString', connectionString);
+    if (!connectionString) {
+        throw Error('Fetch AWS Secret failed');
+    }
+    yield (0, umzug_1.migrateUp)(connectionString);
+    const pool = new pg_1.Pool({ connectionString });
+    console.log('Pool created');
+    try {
+        console.log('Fire SELECT NOW');
+        const res = yield pool.query('SELECT NOW()');
+        console.log('SELECT NOW', res);
+        // await pool.end();
+    }
+    catch (err) {
+        console.error('SELECT NOW ERROR', err);
+    }
+    //ToDo: Run postgres migration
     const app = (0, express_1.default)();
     app.use((0, cors_1.default)());
     app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        res.send(`TS App is Running - ${(process.env.SECRET_ARN || 'foobar').slice(0, 5)}`);
+        res.send(`TS App is Running - ${(process.env.SECRET_ARN || 'foobar').slice(0, 10)}`);
     }));
-    const url = `postgres://postgres:${secret}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
-    console.log('url', url);
-    // app.use(
-    //     postgraphile(
-    //         url,
-    //         "public",
-    //         {
-    //             watchPg: true,
-    //             graphiql: true,
-    //             enhanceGraphiql: true,
-    //             jwtSecret: 'supersecretjwttokenpass',
-    //             jwtPgTypeIdentifier: 'public.jwt_token',
-    //             // pgDefaultRole: 'user_guest'
-    //         } 
-    //     )
-    // );
-    const port = process.env.PORT || 8080;
-    app.listen(port, () => {
-        console.log(`server is running on PORT ${port}`);
+    app.use((0, postgraphile_1.default)(connectionString, "public", {
+        watchPg: true,
+        graphiql: true,
+        enhanceGraphiql: true,
+        // jwtSecret: 'supersecretjwttokenpass',
+        // jwtPgTypeIdentifier: 'public.jwt_token',
+        // pgDefaultRole: 'user_guest'
+    }));
+    const expressPort = process.env.PORT || 8080;
+    const server = app.listen(expressPort, () => {
+        console.log(`Blitz Backend is running on PORT ${expressPort}`);
     });
-}).catch(error => {
-    console.log('Error while loading secret');
-    console.log(error);
+    process.on('SIGTERM', () => {
+        console.log('SIGTERM signal received: closing Express server');
+        server.close(() => {
+            console.log('Express server successfully closed');
+        });
+    });
+});
+bootstrap().catch((err) => {
+    console.error(err);
+    process.exit(1);
 });

@@ -31,7 +31,7 @@ export class EcsStack extends Stack {
         // });
         
         const cluster = new Cluster(this, `Cluster-${props.stage}`, {
-            containerInsights: true,
+            containerInsights: false,
             vpc: props.vpc,
         });
         
@@ -40,19 +40,20 @@ export class EcsStack extends Stack {
         // });
 
         const dockerFolder = path.join(__dirname, '..', '..');
-        console.log('Docker folder', dockerFolder);
+        // console.log('Docker folder', dockerFolder);
 
         new ApplicationLoadBalancedFargateService(this, `FargateService-${props.stage}`, {
             cluster,
             taskImageOptions: {
                 enableLogging: true,
+                taskRole: props.role,
                 // executionRole: props.role,
                 image: ContainerImage.fromAsset(dockerFolder, {
-                    buildArgs: {}
+                    buildArgs: {},
                 }),
                 environment: props.environment,
-                containerPort: 8080
-            },                        
+                containerPort: 8080                
+            },  
             publicLoadBalancer: true,
         });    
     }

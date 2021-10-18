@@ -7,7 +7,7 @@ export interface VpcStackProps extends StackProps {
 
 export class VpcStack extends Stack {
     readonly vpc: Vpc;
-    // readonly ingressSecurityGroup: SecurityGroup;
+    readonly ingressSecurityGroup: SecurityGroup;
     // readonly egressSecurityGroup: SecurityGroup;
 
     constructor(scope: App, id: string, props: VpcStackProps) {
@@ -28,11 +28,12 @@ export class VpcStack extends Stack {
             maxAzs: 2
         });
 
-        // this.ingressSecurityGroup = new SecurityGroup(this, `ingress-security-group`, {
-        //     vpc: this.vpc,
-        //     allowAllOutbound: true,
-        // });
-        // this.ingressSecurityGroup.addIngressRule(Peer.ipv4('10.0.0.0/16'), Port.tcp(5432));
+        this.ingressSecurityGroup = new SecurityGroup(this, `ingress-security-group-${props.stage}`, {
+            vpc: this.vpc,
+            allowAllOutbound: true,
+        });
+        // ToDo: maybe set this rule after creating ECS stack to set explicit IP?
+        this.ingressSecurityGroup.addIngressRule(Peer.ipv4('10.0.0.0/16'), Port.tcp(5432));
         
         // this.egressSecurityGroup = new SecurityGroup(this, 'egress-security-group', {
         //     vpc: this.vpc,

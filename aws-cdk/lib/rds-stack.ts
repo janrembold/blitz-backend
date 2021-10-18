@@ -6,7 +6,7 @@ import { IRole } from "@aws-cdk/aws-iam";
 
 export interface RDSStackProps extends StackProps {
     vpc: Vpc;
-    // inboundDbAccessSecurityGroup: string;
+    inboundDbAccessSecurityGroup: string;
     role: IRole;
     stage: string; 
 }
@@ -42,9 +42,9 @@ export class RDSStack extends Stack {
             databaseName: 'blitz',
             credentials: Credentials.fromSecret(this.secret, dbUsername),
             allocatedStorage: 5,
-            // securityGroups: [
-            //     SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
-            // ]
+            securityGroups: [
+                SecurityGroup.fromSecurityGroupId(this, 'inboundDbAccessSecurityGroup' + id, props.inboundDbAccessSecurityGroup)
+            ]
             // backupRetention: Duration.days(3),
             // publiclyAccessible: false,
             // multiAz: false,

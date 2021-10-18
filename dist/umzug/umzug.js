@@ -9,12 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAwsSecret = void 0;
-const aws_sdk_1 = require("aws-sdk");
-const region = process.env.AWS_DEFAULT_REGION || 'eu-central-1';
-const SecretsManagerInstance = new aws_sdk_1.SecretsManager({ region });
-const getAwsSecret = (secretName = '') => __awaiter(void 0, void 0, void 0, function* () {
-    const rawSecret = yield SecretsManagerInstance.getSecretValue({ SecretId: secretName }).promise();
-    return JSON.parse(rawSecret.SecretString || '{}');
+exports.migrateUp = void 0;
+const { Sequelize } = require('sequelize');
+const { Umzug, SequelizeStorage } = require('umzug');
+const migrateUp = (connectionString) => __awaiter(void 0, void 0, void 0, function* () {
+    const migrationFiles = path.join(__dirname, '..', 'migrations', '*.js');
+    const sequelize = new Sequelize(connectionString);
+    console.log('migrationFiles', migrationFiles);
+    const umzug = new Umzug({
+        migrations: { glob: migrationFiles },
+        context: sequelize.getQueryInterface(),
+        storage: new SequelizeStorage({ sequelize }),
+        logger: console,
+    });
+    yield umzug.up();
 });
-exports.getAwsSecret = getAwsSecret;
+exports.migrateUp = migrateUp;
