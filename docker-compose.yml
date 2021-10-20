@@ -1,11 +1,36 @@
 version: '3.7'
+
 services:
-  mongo:
-    container_name: mongo
-    image: mongo
-  app:
-    container_name: app
-    external_links:
-      - mongo
-    depends_on:
-      - mongo
+  db:
+    image: postgres:13
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecret
+      POSTGRES_DB: blitz
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+  # depends_on:
+  #   db:
+  #     condition: service_healthy
+
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile.dev
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy

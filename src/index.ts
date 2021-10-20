@@ -1,21 +1,13 @@
 import express, { Application, Request, Response } from "express";
 import cors from 'cors';
 import postgraphile from "postgraphile";
-import { getAwsSecret } from "./utils/getAwsSecret";
-import { migrateUp } from "./umzug/umzug";
+import { migrateUp } from "./migrate/migrate";
+import { getDbConnectionString } from "./utils/getDbConnectionString";
 
-
-// Add https://github.com/sequelize/umzug
 // Add https://github.com/graphile/worker OR https://github.com/timgit/pg-boss
 
-const getDbConnectionString = async (): Promise<string> => {
-  const {username, password, host, port, dbname} = await getAwsSecret(process.env.SECRET_ARN);
-  // const connectionString = `postgresql://postgres:${credentials.password}@${process.env.DB_HOST}:5432/blitz`;
-  return `postgres://${username}:${password}@${host}:${port}/${dbname}`;
-}
-
 const bootstrap = async () => {
-  const connectionString = await getDbConnectionString();
+  const connectionString = process.env.DEV_CONNECTION || await getDbConnectionString(process.env.SECRET_ARN);
   console.log('connectionString', connectionString);
 
   if(!connectionString) {
