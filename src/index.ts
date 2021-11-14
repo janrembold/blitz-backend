@@ -1,52 +1,59 @@
 import { ApolloServer, gql } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { AuthenticationError } from 'apollo-server-errors';
 import express, { Application, Request, Response } from "express";
-import cors from 'cors';
+import expressJwt from "express-jwt";
+// import cors from 'cors';
 // import postgraphile from "postgraphile";
 import { migrateUp } from "./migrate/migrate";
 import { getDbConnectionString } from "./utils/getDbConnectionString";
 import { sign } from 'jsonwebtoken';
 import http from 'http';
+import { UserModel } from './domains/users/UserModel';
+import { UsersTypeDefs } from './domains/users/typeDef';
 
 // Add https://github.com/graphile/worker OR https://github.com/timgit/pg-boss
 
+const JWT_SECRET = process.env.JWT_SECRET || "f1BtnWgD3VKY";
+const JWT_ALGORITHM = 'HS256';
+
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book]
+    getFoo: String
   }
-`;
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-];
+  type Mutation
+`;
 
 const resolvers = {
   Query: {
-    books: () => books,
+    getFoo(_parent: any, _args: any, { user }: any) {
+      console.log(user)
+      return user?.sub || 'Bar';
+    }
   },
+  Mutation: {
+    async login(_parent: any, { email, password }: any) {
+
+      const userId = await UserModel.getAuthenticatedUserId(email, password);
+      console.log('mutation', email, password, userId);
+
+      if(!userId) {
+        throw new AuthenticationError('Authentication failed');
+      }
+
+      return sign(
+        {},
+        JWT_SECRET,
+        { algorithm: JWT_ALGORITHM, subject: userId, expiresIn: "1d" }
+      );
+    }
+  }
 };
 
 const bootstrap = async () => {
   const connectionString = process.env.DEV_CONNECTION || await getDbConnectionString(process.env.SECRET_ARN);
-  console.log('connectionString', connectionString);
+  // console.log('connectionString', connectionString);
 
   if(!connectionString) {
     throw Error('Fetch AWS Secret failed');
@@ -55,12 +62,24 @@ const bootstrap = async () => {
   await migrateUp(connectionString);
 
   const app: Application = express();
+
+  app.use(
+    expressJwt({
+      secret: JWT_SECRET,
+      algorithms: [JWT_ALGORITHM],
+      credentialsRequired: false
+    })
+  );
   
   const httpServer = http.createServer(app);
   const server = new ApolloServer({
-    typeDefs,
+    typeDefs: [typeDefs, UsersTypeDefs],
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    context: ({ req }) => {
+      const user = req.user || null;
+      return { user };
+    }
   });
   
   await server.start();
@@ -111,6 +130,7 @@ const bootstrap = async () => {
   process.on('SIGTERM', () => {
     console.log('SIGTERM signal received: closing Express server')
 
+    //ToDo: Shutdown pg pool connection
     // server.close(() => {
     //   console.log('Express server successfully closed')
     // })
