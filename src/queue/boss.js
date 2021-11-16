@@ -24,7 +24,7 @@ export const getQueue = () => {
   return boss;
 };
 
-export const publishToQueue = (data, options = {}, queue = 'blitz-queue') =>
+export const publishToQueue = (data, options = {}, queue = 'default-queue') =>
   boss.publish(queue, data, options);
 
-export const subscribeToQueue = (callback, queue = 'blitz-queue') => boss.subscribe(queue, callback);
+export const subscribeToQueue = (callback, queue = 'default-queue') => boss.subscribe(queue, callback);
