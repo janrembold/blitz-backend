@@ -5,13 +5,14 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node dist/index.js",
-    "dev": "cross-env PORT=5001 DEV_CONNECTION=postgres://postgres:supersecret@localhost:5432/blitz ts-node src/index.ts",
+    "dev": "cross-env PORT=5001 DEV_CONNECTION=postgres://postgres:supersecret@localhost:5432/blitz ts-node src/index.js",
     "migration.create": "cross-env DEV_CONNECTION=postgres://postgres:supersecret@localhost:5432/blitz node src/migrate/migrateCLI.js create --name",
     "build": "tsc",
     "dev.app": "cross-env PORT=5000 DEV_CONNECTION=postgres://postgres:supersecret@localhost:5432/blitz ts-node src/migrate/migrate.js",
     "dev.db": "docker-compose -f docker-compose.yml up"
   },
   "dependencies": {
+    "@graphql-tools/schema": "8.3.1",
     "@types/jsonwebtoken": "^8.5.5",
     "apollo-server-core": "^3.5.0",
     "apollo-server-express": "^3.5.0",
@@ -20,9 +21,12 @@
     "express": "^4.17.1",
     "express-jwt": "^6.1.0",
     "graphql": "^16.0.1",
+    "graphql-subscriptions": "2.0.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
-    "postgraphile": "4.12.4"
+    "pg-boss": "6.2.2",
+    "postgraphile": "4.12.4",
+    "subscriptions-transport-ws": "0.11.0"
   },
   "devDependencies": {
     "@slonik/migrator": "0.8.5",

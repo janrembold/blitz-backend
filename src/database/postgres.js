@@ -2,19 +2,22 @@ import { Pool } from 'pg';
 
 let poolInstance;
 
-export const getPostgresPool = () => {
+export const initPostgresConnection = (connectionString) => {
   if (!poolInstance) {
     try {
-      poolInstance = new Pool({ connectionString: process.env.DEV_CONNECTION });
+      poolInstance = new Pool({ connectionString });
 
       poolInstance.on('error', (err) => {
         console.error('Unexpected error on idle client', err);
         process.exit(-1);
       });
+
+      console.info('PG connection initialized');
     } catch (error) {
-      console.log('DB ERROR', error);
+      console.error('DB ERROR', error);
+      throw new Error('Error connecting to database');
     }
   }
-
-  return poolInstance;
 };
+
+export const getPostgresPool = () => poolInstance;
