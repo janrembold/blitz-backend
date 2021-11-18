@@ -3,7 +3,6 @@ CREATE TABLE authentications
     id SERIAL PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    role text NOT NULL,
     user_id uuid NOT NULL,
 
     CONSTRAINT fk_user
