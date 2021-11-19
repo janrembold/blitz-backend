@@ -1,4 +1,4 @@
-import { ForbiddenError } from 'apollo-server-errors';
+import { AuthenticationError, ForbiddenError } from 'apollo-server-errors';
 import { PubSub } from 'graphql-subscriptions';
 import { Ships } from '../../models/Ships';
 
@@ -8,20 +8,21 @@ const NEW_SHIP_POSITION_PUBSUB = 'UPDATE_SHIP_SUBSCRIPTION';
 export const resolvers = {
   Query: {
     async getShipsInSystem(_parent, { systemId }, { user }) {
-      const allShips = await Ships().getAllShipsInSystem(systemId);
-      console.log('query getShipsInSystem for', systemId, allShips, user.sub);
+      if (!user) {
+        throw new AuthenticationError();
+      }
 
-      // TODO: automate that!!!!
-      // if (!user.sub) {
-      //   throw new AuthenticationError('Not authenticated');
-      // }
-
-      return allShips;
+      // console.log('query getShipsInSystem for', systemId, user);
+      return await Ships().getAllShipsInSystem(systemId);
     },
   },
   Mutation: {
     async updateShipPosition(_parent, { systemId, shipId, x, y }, { user }) {
-      console.log('mutation updateShipPosition', systemId, shipId, x, y, user.sub);
+      if (!user) {
+        throw new AuthenticationError();
+      }
+
+      console.log('mutation updateShipPosition', systemId, shipId, x, y, user);
 
       // const ship = await UserModel.getAuthenticatedUserId(email, password);
 

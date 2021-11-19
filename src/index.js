@@ -1,7 +1,6 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import express from 'express';
-import expressJwt from 'express-jwt';
 import { createServer } from 'http';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
@@ -10,9 +9,10 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { migrateUp } from './migrate/migrate';
 import { getDbConnectionString } from './utils/getDbConnectionString';
 import { typeDefs, resolvers } from './graphql';
-import { DEV_CONNECTION, JWT_ALGORITHM, JWT_SECRET, PORT, SECRET_ARN } from './config/environment';
+import { DEV_CONNECTION, PORT, SECRET_ARN } from './config/environment';
 import { initPostgresConnection } from './database/postgres';
 import { initQueue } from './queue/boss';
+import { decodeJwtToken } from './utils/jwt';
 
 const bootstrap = async () => {
   const connectionString = DEV_CONNECTION || (await getDbConnectionString(SECRET_ARN));
@@ -26,17 +26,10 @@ const bootstrap = async () => {
   // await initKnexConnection(connectionString);
 
   const app = express();
-  const httpServer = createServer(app);
-  let subscriptionServer;
-
   app.disable('x-powered-by');
-  app.use(
-    expressJwt({
-      secret: JWT_SECRET,
-      algorithms: [JWT_ALGORITHM],
-      credentialsRequired: false,
-    }),
-  );
+
+  let subscriptionServer;
+  const httpServer = createServer(app);
 
   const schema = makeExecutableSchema({
     typeDefs,
@@ -57,7 +50,9 @@ const bootstrap = async () => {
       },
       ApolloServerPluginDrainHttpServer({ httpServer }),
     ],
-    context: ({ req }) => ({ user: req.user || null }),
+    context: ({ req }) => {
+      return { user: decodeJwtToken(req.headers.authorization) };
+    },
   });
 
   await server.start();
