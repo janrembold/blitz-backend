@@ -4,8 +4,6 @@ const path = require('path');
 
 export const migrateUp = async (connectionString) => {
   const migrationFiles = path.join(__dirname, 'migrations');
-  console.log('migrationFiles', migrationFiles);
-
   const slonik = createPool(connectionString);
   const migrator = new SlonikMigrator({
     migrationsPath: migrationFiles,
@@ -14,4 +12,5 @@ export const migrateUp = async (connectionString) => {
   });
 
   await migrator.up();
+  console.info('Migrations completed');
 };

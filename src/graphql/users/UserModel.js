@@ -1,8 +1,8 @@
-import { getPostgresPool } from '../../database/postgres';
+import { getPgClient } from '../../database/postgres';
 
 export const UserModel = {
   getAuthenticatedUserId: async (email, password) => {
-    const pg = getPostgresPool();
+    const pg = getPgClient();
 
     try {
       const res = await pg.query('SELECT get_authenticated_user_id($1, $2);', [email, password]);

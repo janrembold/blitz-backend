@@ -10,7 +10,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { migrateUp } from './migrate/migrate';
 import { getDbConnectionString } from './utils/getDbConnectionString';
 import { typeDefs, resolvers } from './graphql';
-import { DEV_CONNECTION, JWT_ALGORITHM, JWT_SECRET, SECRET_ARN } from './config/environment';
+import { DEV_CONNECTION, JWT_ALGORITHM, JWT_SECRET, PORT, SECRET_ARN } from './config/environment';
 import { initPostgresConnection } from './database/postgres';
 import { initQueue } from './queue/boss';
 
@@ -22,7 +22,8 @@ const bootstrap = async () => {
 
   await migrateUp(connectionString);
   await initQueue(connectionString);
-  initPostgresConnection(connectionString);
+  await initPostgresConnection(connectionString);
+  // await initKnexConnection(connectionString);
 
   const app = express();
   const httpServer = createServer(app);
@@ -70,8 +71,8 @@ const bootstrap = async () => {
     },
   );
 
-  await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 
   app.get('/health', async (_req, res) => {
     res.status(200).json({
