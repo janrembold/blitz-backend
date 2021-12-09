@@ -1,13 +1,15 @@
+import { gql } from 'apollo-server-core';
+import { MobShipsTypeDefs } from './mobShips/typeDef';
 import { UsersTypeDefs } from './users/typeDef';
-import { gql } from 'apollo-server-express';
-import { ShipsTypeDefs } from './ships/typeDef';
 
 export const typeDefs = [
   gql`
+    scalar Json
+
     type Query
     type Subscription
     type Mutation
   `,
   UsersTypeDefs,
-  ShipsTypeDefs,
+  MobShipsTypeDefs,
 ];

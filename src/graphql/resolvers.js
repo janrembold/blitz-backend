@@ -1,4 +1,4 @@
-import { resolvers as userResolvers } from './users/resolvers';
-import { resolvers as shipResolvers } from './ships/resolvers';
+import { MobShipSResolvers } from './mobShips/resolvers';
+import { UsersResolvers } from './users/resolvers';
 
-export const resolvers = [userResolvers, shipResolvers];
+export const resolvers = [UsersResolvers, MobShipSResolvers];

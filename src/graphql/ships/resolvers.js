@@ -1,6 +1,5 @@
-import { AuthenticationError, ForbiddenError } from 'apollo-server-errors';
-import { PubSub } from 'graphql-subscriptions';
-import { Ships } from '../../models/Ships';
+import { AuthenticationError } from 'apollo-server-errors';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 
 const pubsub = new PubSub();
 const NEW_SHIP_POSITION_PUBSUB = 'UPDATE_SHIP_SUBSCRIPTION';
@@ -12,8 +11,8 @@ export const resolvers = {
         throw new AuthenticationError();
       }
 
-      // console.log('query getShipsInSystem for', systemId, user);
-      return await Ships().getAllShipsInSystem(systemId);
+      console.log('query getShipsInSystem for', systemId, user);
+      return []; // await Ships().getAllShipsInSystem(systemId);
     },
   },
   Mutation: {
@@ -25,20 +24,22 @@ export const resolvers = {
       console.log('mutation updateShipPosition', systemId, shipId, x, y, user);
 
       // const ship = await UserModel.getAuthenticatedUserId(email, password);
+      // if (!true) {
+      //   throw new ForbiddenError('Cheater!!!!');
+      // }
 
-      if (!true) {
-        throw new ForbiddenError('Cheater!!!!');
-      }
-
-      if (user.sub !== ship.user_id) {
-        pubsub.publish(NEW_SHIP_POSITION_PUBSUB, { shipId, x, y });
-      }
+      pubsub.publish(NEW_SHIP_POSITION_PUBSUB, { newShipPosition: { systemId, shipId, x, y } });
+      // if (user.sub !== ship.user_id) {
+      // }
       return true;
     },
   },
   Subscription: {
     newShipPosition: {
-      subscribe: () => pubsub.asyncIterator([NEW_SHIP_POSITION_PUBSUB]),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([NEW_SHIP_POSITION_PUBSUB]),
+        (payload, variables) => payload.newShipPosition.systemId === variables.systemId,
+      ),
     },
   },
 };

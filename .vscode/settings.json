@@ -1,11 +1,25 @@
 {
+  "editor.codeActionsOnSave": [
+      "source.organizeImports",
+      "source.fixAll.eslint",
+  ],
+  "[javascript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+  "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+  ],
+  "eslint.format.enable": true,
 }

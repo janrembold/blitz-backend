@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 export const ShipsTypeDefs = gql`
   type ShipPosition {
+    systemId: Int!
     shipId: Int!
     x: Int!
     y: Int!
@@ -23,6 +24,6 @@ export const ShipsTypeDefs = gql`
   }
 
   extend type Subscription {
-    newShipPosition: ShipPosition!
+    newShipPosition(systemId: Int!): ShipPosition!
   }
 `;
