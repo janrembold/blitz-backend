@@ -4,7 +4,9 @@ export const MobShipsTypeDefs = gql`
   type MobShip {
     id: Int!
     name: String!
+    speed: Int!
     routing_points: Json!
+    created_at: String!
   }
 
   extend type Query {

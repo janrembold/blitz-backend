@@ -4,6 +4,7 @@ CREATE TABLE authentications
     email text UNIQUE NOT NULL,
     password text NOT NULL,
     user_id uuid NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_user
       FOREIGN KEY(user_id) 

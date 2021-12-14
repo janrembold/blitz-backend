@@ -1,7 +1,8 @@
 CREATE TABLE mob_ships
 (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    speed INT NOT NULL
 );
 
 CREATE TABLE mob_ship_positions
@@ -10,7 +11,7 @@ CREATE TABLE mob_ship_positions
     mob_ship_id INT NOT NULL,
     routing_points JSONB NOT NULL,
     blocked BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_mob_ship_positions_mob_ships
       FOREIGN KEY(mob_ship_id) 
@@ -41,7 +42,7 @@ CREATE TABLE ship_positions
     target_x INTEGER,
     target_y INTEGER,
     blocked BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_ship_positions_ships
       FOREIGN KEY(ship_id) 

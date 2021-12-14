@@ -11,15 +11,15 @@ INSERT INTO authentications (user_id, email, password)
 
 -- MOB SHIPS
 
-INSERT INTO mob_ships (id, name) VALUES (1, 'MOB Ship 1');
-INSERT INTO mob_ships (id, name) VALUES (2, 'MOB Ship 2');
+INSERT INTO mob_ships (id, name, speed) VALUES (1, 'MOB Ship 1', 10);
+INSERT INTO mob_ships (id, name, speed) VALUES (2, 'MOB Ship 2', 12);
 
 
 -- MOB SHIP POSITIONS
 
-INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (1, 1, '{"route":[[10,10],[990,990],[10,500],[500,10]]}');
-INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (2, 1, '{"route":[[910,10],[690,790],[90,400],[50,10]]}');
-INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (3, 1, '{"route":[[510,10],[890,890],[10,600],[90,90]]}');
+-- INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (1, 1, '{"route":[[10,10],[990,990],[10,500],[500,10]]}');
+-- INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (2, 1, '{"route":[[910,10],[690,790],[90,400],[50,10]]}');
+-- INSERT INTO mob_ship_positions (id, mob_ship_id, routing_points) VALUES (3, 1, '{"route":[[510,10],[890,890],[10,600],[90,90]]}');
 
 
 -- USER SHIPS

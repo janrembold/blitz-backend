@@ -1,18 +1,18 @@
-import express from 'express';
-import cors from 'cors';
-import { ApolloServer } from 'apollo-server-express';
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import { createServer } from 'http';
-import { execute, subscribe } from 'graphql';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-
-import { migrateUp } from './migrate/migrate';
-import { getDbConnectionString } from './utils/getDbConnectionString';
-import { typeDefs, resolvers } from './graphql';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
+import express from 'express';
+import { execute, subscribe } from 'graphql';
+import { createServer } from 'http';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { DEV_CONNECTION, PORT, SECRET_ARN } from './config/environment';
 import { initPostgresConnection } from './database/postgres';
-import { initQueue } from './queue/boss';
+import { resolvers, typeDefs } from './graphql';
+import { migrateUp } from './migrate/migrate';
+import { initQueue, stopQueue } from './queue/boss';
+import { initAllSubscriptions } from './queue/subscriptions/initAllSubscriptions';
+import { getDbConnectionString } from './utils/getDbConnectionString';
 import { decodeJwtToken } from './utils/jwt';
 
 /**
@@ -22,18 +22,19 @@ import { decodeJwtToken } from './utils/jwt';
  * - use Cache Manager to store refresh tokens - see: https://www.npmjs.com/package/cache-manager
  */
 
-const whitelistOperations = ['login', 'IntrospectionQuery'];
-
 const bootstrap = async () => {
   const connectionString = DEV_CONNECTION || (await getDbConnectionString(SECRET_ARN));
   if (!connectionString) {
     throw Error('No DB connection found');
   }
 
+  console.info('Hello Galaxy', new Date().toISOString());
+
   await migrateUp(connectionString);
   await initQueue(connectionString);
   await initPostgresConnection(connectionString);
   // await initKnexConnection(connectionString);
+  initAllSubscriptions();
 
   const app = express();
   app.disable('x-powered-by');
@@ -61,6 +62,7 @@ const bootstrap = async () => {
         async serverWillStart() {
           return {
             async drainServer() {
+              await stopQueue();
               subscriptionServer && subscriptionServer.close();
             },
           };

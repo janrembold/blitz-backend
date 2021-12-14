@@ -29,13 +29,16 @@ const createMobShips = (count: number) => {
 };
 
 const createMobShip = () => {
-  const routingPointCount = 2;
+  const routingPointCount = 20;
   const routingPoints: [number, number][] = [];
+
+  // ToDo: start with outer border position and move on with safe area border - no random world position
 
   for (let index = 0; index < routingPointCount; index++) {
     const { x, y } = getRandomWorldPosition();
     routingPoints.push([x, y]);
   }
 
+  // format: [mob_ship_id, distance, routing_points]
   return [1, JSON.stringify({ route: routingPoints })];
 };
