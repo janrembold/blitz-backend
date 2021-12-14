@@ -77,7 +77,6 @@ const bootstrap = async () => {
 
   await server.start();
   server.applyMiddleware({ app, cors: false });
-  console.log('server.graphqlPath', server.graphqlPath);
 
   subscriptionServer = SubscriptionServer.create(
     {
