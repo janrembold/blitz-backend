@@ -5,6 +5,7 @@ import { UsersTypeDefs } from './users/typeDef';
 export const typeDefs = [
   gql`
     scalar Json
+    scalar timestamptz
 
     type Query
     type Subscription

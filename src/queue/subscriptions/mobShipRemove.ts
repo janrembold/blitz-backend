@@ -2,8 +2,8 @@ import { removeMobShipPosition } from '../../models/MobShips/removeMobShipPositi
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mobShipRemove = async (job: any) => {
-  console.log('mob ship remove subscription', job);
-  const id = job.data.mobShipPosition?.id;
+  const id = job.data.mobShipPosition.id;
+  console.log('remove mob ship', id);
 
   if (id) {
     await removeMobShipPosition(id);

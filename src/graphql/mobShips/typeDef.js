@@ -3,10 +3,10 @@ import { gql } from 'apollo-server-express';
 export const MobShipsTypeDefs = gql`
   type MobShip {
     id: Int!
-    name: String!
+    asset_key: String!
     speed: Int!
     routing_points: Json!
-    created_at: String!
+    created_at: timestamptz!
   }
 
   extend type Query {

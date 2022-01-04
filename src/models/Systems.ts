@@ -15,4 +15,4 @@ export const getSystemById = (systemId: number) =>
   //     console.error('Systems getSystemById', error);
   //   }
 
-  ({ id: systemId, max_mobship_count: 20 });
+  ({ id: systemId, key: 'system_1_default', max_mobship_count: 20 });

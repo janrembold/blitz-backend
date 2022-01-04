@@ -1,6 +1,6 @@
 import { AuthenticationError } from 'apollo-server-errors';
 import { PubSub, withFilter } from 'graphql-subscriptions';
-import { getAllMobShipsInSystem } from './resolvers/getAllMobShipsInSystem';
+import { getAllMobShipsInSystem } from '../../game/MobShips/getAllMobShipsInSystem';
 
 const pubsub = new PubSub();
 const NEW_SHIP_POSITION_PUBSUB = 'UPDATE_SHIP_SUBSCRIPTION';
@@ -12,7 +12,6 @@ export const MobShipSResolvers = {
         throw new AuthenticationError();
       }
 
-      // console.log('query getShipsInSystem for', systemId, user);
       return getAllMobShipsInSystem(systemId);
     },
   },
