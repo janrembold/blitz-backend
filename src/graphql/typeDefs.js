@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { MobShipsTypeDefs } from './mobShips/typeDef';
+import { SystemsTypeDefs } from './systems/typeDef';
 import { UsersTypeDefs } from './users/typeDef';
 
 export const typeDefs = [
@@ -13,4 +14,5 @@ export const typeDefs = [
   `,
   UsersTypeDefs,
   MobShipsTypeDefs,
+  SystemsTypeDefs,
 ];
