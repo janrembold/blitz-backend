@@ -11,8 +11,29 @@ export const SystemsTypeDefs = gql`
     y: Int!
   }
 
+  type Destination {
+    id: Int!
+    name: String!
+    type: String!
+    asset_key: String!
+    x: Int!
+    y: Int!
+  }
+
+  type SystemDetails {
+    id: Int!
+    name: String!
+    type: String!
+    asset_key: String!
+    level: Int!
+    x: Int!
+    y: Int!
+    destinations: [Destination!]!
+  }
+
   extend type Query {
     getAllSystems: [System!]!
+    getSystemDetails(systemId: Int!): SystemDetails!
   }
 `;
 

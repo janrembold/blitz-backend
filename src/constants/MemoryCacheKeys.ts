@@ -1,3 +1,4 @@
 export enum MemoryCacheKeys {
-  'SYSTEMS' = 'systems',
+  SYSTEMS = 'systems',
+  DESTINATIONS = 'destinations',
 }
