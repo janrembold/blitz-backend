@@ -1,29 +1,39 @@
 import { addSeconds } from 'date-fns';
 import format from 'pg-format';
-import { getPgClient } from '../database/postgres';
-import { publishToQueue } from '../queue/boss';
-import { getRoutingPointsTotalDistance } from '../utils/distance';
+import { getPgClient } from '../../database/postgres';
+import { publishToQueue } from '../../queue/boss';
+import { getRoutingPointsTotalDistance } from '../../utils/distance';
 
 export const getAllMobShipPositionsBySystemId = async (systemId: number) => {
   const pg = getPgClient();
 
-  console.log('todo: getAllMobShipsInSystem', systemId);
-
   try {
-    const res = await pg.query(`
-      SELECT ms.asset_key, msp.speed, msp.id, msp.routing_points, msp.created_at 
+    const res = await pg.query(
+      `
+      SELECT 
+        msp.id, 
+        msp.speed, 
+        msp.system_id, 
+        msp.routing_points, 
+        msp.blocked, 
+        msp.created_at,
+        json_build_object(
+          'id', ms.id,
+          'asset_key', ms.asset_key,
+          'type', ms.type
+        ) as mob_ship
       FROM mob_ship_positions msp 
-      LEFT JOIN mob_ships ms ON ms.id = msp.mob_ship_id;
-    `);
-
-    console.log('mobship select', res.rows[0], res.rows[0].created_at);
+      LEFT JOIN mob_ships ms ON ms.id = msp.mob_ship_id
+      WHERE msp.system_id = $1;
+    `,
+      [systemId],
+    );
 
     return res.rows;
   } catch (error) {
     console.error('getAllMobShipPositionsBySystemId', error);
+    throw new Error('Error query mob ship positions by system id');
   }
-
-  return [];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,7 +47,7 @@ export const insertMobShips = async (ships: any): Promise<number> => {
   try {
     const res = await pg.query(
       format(
-        'INSERT INTO mob_ship_positions (mob_ship_id, speed, routing_points) VALUES %L RETURNING *;',
+        'INSERT INTO mob_ship_positions (mob_ship_id, system_id, speed, routing_points) VALUES %L RETURNING *;',
         ships,
       ),
     );

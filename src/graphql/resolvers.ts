@@ -1,6 +1,5 @@
-import { DestinationsResolvers } from './destinations/resolvers';
-import { MobShipSResolvers } from './mobShips/resolvers';
-import { SystemsResolvers } from './systems/resolvers';
-import { UsersResolvers } from './users/resolvers';
+import { MobShipSResolvers } from './MobShips/resolvers';
+import { SystemsResolvers } from './Systems/resolvers';
+import { UsersResolvers } from './Users/resolvers';
 
-export const resolvers = [UsersResolvers, MobShipSResolvers, SystemsResolvers, DestinationsResolvers];
+export const resolvers = [UsersResolvers, MobShipSResolvers, SystemsResolvers];

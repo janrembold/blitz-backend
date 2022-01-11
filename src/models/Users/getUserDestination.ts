@@ -1,5 +1,5 @@
 import { getPgClient } from '../../database/postgres';
-import { DestinationResponse } from '../../graphql/users/typeDef';
+import { DestinationResponse } from '../../graphql/Users/typeDef';
 
 export const getUserDestination = async (userId: string): Promise<DestinationResponse[]> => {
   const pg = getPgClient();
@@ -7,8 +7,8 @@ export const getUserDestination = async (userId: string): Promise<DestinationRes
   try {
     const res = await pg.query(
       `
-      SELECT u.destination_id, d.system_id FROM users u
-      LEFT JOIN destinations d ON d.id = u.destination_id
+      SELECT u.planet_id, p.system_id FROM users u
+      LEFT JOIN planets p ON p.id = u.planet_id
       WHERE u.id = $1 LIMIT 1;
     `,
       [userId],

@@ -9,7 +9,6 @@ export const removeMobShipPosition = async (id: number): Promise<number> => {
     return res.rowCount;
   } catch (error) {
     console.error('removeMobShipPosition', error);
+    throw new Error('Error removing mob ship position');
   }
-
-  return 0;
 };

@@ -1,9 +1,9 @@
 import { MemoryCacheKeys } from '../../constants/MemoryCacheKeys';
 import { memoryCache } from '../../database/cacheManager';
 import { getPgClient } from '../../database/postgres';
-import { SystemResponse } from '../../graphql/systems/typeDef';
+import { System } from '../../graphql/Systems/typeDef';
 
-export const getAllSystems = async (): Promise<SystemResponse[]> => {
+export const getSystems = async (): Promise<System[]> => {
   try {
     return await memoryCache.wrap(MemoryCacheKeys.SYSTEMS, getAllSystemsPromise, { ttl: 3600 });
   } catch (error) {
@@ -13,9 +13,9 @@ export const getAllSystems = async (): Promise<SystemResponse[]> => {
   throw new Error('Error loading systems');
 };
 
-const getAllSystemsPromise = async (): Promise<SystemResponse[]> => {
+const getAllSystemsPromise = async (): Promise<System[]> => {
   const pg = getPgClient();
   const res = await pg.query('SELECT * FROM systems;');
 
-  return res.rows as SystemResponse[];
+  return res.rows as System[];
 };

@@ -37,7 +37,7 @@
 		<type label="SET" length="1" sql="SET" quote=""/>
 		<type label="Bit" length="0" sql="bit" quote=""/>
 	</group>
-</datatypes><table x="327" y="222" name="users">
+</datatypes><table x="1353" y="347" name="users">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -47,9 +47,9 @@
 <row name="timezone" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="destination_id" null="1" autoincrement="0">
+<row name="planet_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="destinations" row="id" />
+<default>NULL</default><relation table="planets" row="id" />
 </row>
 <row name="created_at" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -58,7 +58,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="149" y="168" name="authentications">
+<table x="713" y="408" name="authentications">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -79,7 +79,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="606" y="319" name="ships">
+<table x="355" y="595" name="ships">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -94,7 +94,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1008" y="70" name="systems">
+<table x="1054" y="161" name="systems">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -105,7 +105,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1213" y="603" name="mob_ships">
+<table x="1135" y="777" name="mob_ships">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -116,7 +116,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="793" y="320" name="ship_positions">
+<table x="729" y="606" name="ship_positions">
 <row name="ship_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="ships" row="id" />
@@ -152,7 +152,7 @@
 <part>ship_id</part>
 </key>
 </table>
-<table x="1071" y="275" name="mob_ship_positions">
+<table x="1053" y="500" name="mob_ship_positions">
 <row name="id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -186,7 +186,7 @@
 <part>mob_ship_id</part>
 </key>
 </table>
-<table x="714" y="94" name="destinations">
+<table x="643" y="63" name="planets">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -194,10 +194,83 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="systems" row="id" />
 </row>
+<row name="name" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="type" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><comment>planet, mine, station</comment>
 </row>
+<row name="asset_key" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="x" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="y" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="470" y="105" name="mines">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="system_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="systems" row="id" />
+</row>
+<row name="user_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="type" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="asset_key" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="capacity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="min_capacity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="max_capacity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="x" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="y" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1300" y="84" name="stations">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="system_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="systems" row="id" />
+</row>
+<row name="name" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="asset_key" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="x" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="y" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>

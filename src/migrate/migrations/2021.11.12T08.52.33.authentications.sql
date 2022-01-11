@@ -6,7 +6,7 @@ CREATE TABLE authentications
     user_id uuid NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT fk_user
+    CONSTRAINT fk_authentications_users
       FOREIGN KEY(user_id) 
 	    REFERENCES users(id)
           ON DELETE CASCADE

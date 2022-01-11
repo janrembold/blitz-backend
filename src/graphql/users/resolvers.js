@@ -8,7 +8,7 @@ import { loginMutation } from './mutations/login';
 
 export const UsersResolvers = {
   Query: {
-    getUserDestination(_parent, _args, { user }) {
+    myDestination(_parent, _args, { user }) {
       if (!user) {
         throw new AuthenticationError();
       }
