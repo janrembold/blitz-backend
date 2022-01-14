@@ -10,7 +10,8 @@ export const UsersTypeDefs = gql`
 
   type Destination {
     system_id: Int!
-    planet_id: Int!
+    x: Int!
+    y: Int!
   }
 
   extend type Mutation {
@@ -24,5 +25,6 @@ export const UsersTypeDefs = gql`
 
 export interface DestinationResponse {
   system_id: number;
-  planet_id: number;
+  x: number;
+  y: number;
 }
